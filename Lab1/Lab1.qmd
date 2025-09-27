@@ -1,5 +1,5 @@
 ---
-title: "Pr1"
+title: "Lab1"
 author: "MrRedwar"
 format: 
   md:
