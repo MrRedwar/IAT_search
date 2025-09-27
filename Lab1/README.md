@@ -29,24 +29,24 @@ MrRedwar
 
 ![](img/R_inter.png)
 
-1.  Установить Rstudio IDE
+2 Установить Rstudio IDE
 
 ![](img/RIDE.png)
 
-1.  Установить программный пакет swirl
+3 Установить программный пакет swirl
 
 install.packages(“swirl”)
 
-1.  Запустить задание с помощью swirl::swirl
+4 Запустить задание с помощью swirl::swirl
 
 ![](img/1.png)
 
-1.  Выбрать из меню курсов 1. R Programming: The basics of programming
-    in R
+5 Выбрать из меню курсов 1. R Programming: The basics of programming in
+R
 
 ![](img/2.png)
 
-1.  Запустить подкурсы и выполнить:
+6 Запустить подкурсы и выполнить:
 
 6.1 базовые структурные блоки (Basic Building Blocks)
 
