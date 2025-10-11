@@ -1,5 +1,5 @@
 # Lab1
-MrRedwar
+mironopavel@yandex.ru
 
 ## Цель работы
 

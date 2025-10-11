@@ -1,6 +1,6 @@
 ---
 title: "Lab1"
-author: "MrRedwar"
+author: "mironopavel@yandex.ru"
 format: 
   md:
     output-file: README.md
