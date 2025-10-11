@@ -25,7 +25,7 @@ mironopavel@yandex.ru
 
 ## Шаги
 
-1 Установить пакет dplyr
+1.  Установить пакет dplyr
 
 ``` r
 library(dplyr)
