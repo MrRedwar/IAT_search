@@ -14,8 +14,7 @@ mironopavel@yandex.ru
 
 1.  Программное обеспечение Windows 10 Pro
 2.  Rstudio Desktop
-3.  Интерпретатор языка R 4.1
-4.  Програмный пакет swirl
+3.  Интерпретатор языка R
 
 ``` r
 sessionInfo()
@@ -44,6 +43,8 @@ sessionInfo()
      [5] htmltools_0.5.8.1 yaml_2.3.10       rmarkdown_2.30    knitr_1.50       
      [9] jsonlite_2.0.0    xfun_0.53         digest_0.6.37     rlang_1.1.6      
     [13] evaluate_1.0.5   
+
+1.  Програмный пакет swirl
 
 ## План
 
