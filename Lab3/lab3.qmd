@@ -1,0 +1,130 @@
+---
+title: " Основы обработки данных с помощью R и Dplyr"
+author: "mironopavel@yandex.ru"
+format: 
+  md: 
+    output-file: README.md
+---
+
+##Цель работы
+ 1. Развить практические навыки использования языка программирования R для
+ обработки данных
+ 2. Закрепить знания базовых типов данных языка R
+ 3. Развить практические навыки использования функций обработки данных пакета
+ dplyr – функции select(), filter(), mutate(), arrange(), group_by()
+
+## Исходные данные
+
+1. Программное обеспечение Windows 10 Pro
+2. Rstudio Desktop
+3. Интерпретатор языка R 4.5.1
+4. Програмный пакет dplyr
+5. Набор данных nycflights13
+
+## План
+
+1. Установить набор данных nycflights13   
+2. Выполнить курс 
+
+## Шаги
+
+1 Установить набор данных nycflights13 и пакет dplyr.
+
+```{r}
+library(dplyr)
+library(nycflights13)
+```
+
+2  Проанализировать встроенные в пакет nycflights13 наборы данных с помощью языка R и ответить на вопросы:
+
+  2.1 Сколько встроенных в пакет nycflights13 датафреймов?
+  
+```{r}
+nrow(data(package = "nycflights13")$results)
+```
+  2.2 Сколько строк в каждом датафрейме?
+  
+```{r}
+cat("flights:", nrow(flights), "строк\n")
+cat("airlines:", nrow(airlines), "строк\n")
+cat("airports:", nrow(airports), "строк\n")
+cat("planes:", nrow(planes), "строк\n")
+cat("weather:", nrow(weather), "строк")
+```
+
+  2.3 Сколько столбцов в каждом датафрейме?
+  
+```{r}
+cat("flights:", ncol(flights), "столбцов\n")
+cat("airlines:", ncol(airlines), "столбцов\n")
+cat("airports:", ncol(airports), "столбцов\n")
+cat("planes:", ncol(planes), "столбцов\n")
+cat("weather:", ncol(weather), "столбцов")
+```
+
+  2.4  Как просмотреть примерный вид датафрейма
+  
+```{r}
+glimpse(flights)
+glimpse(airlines)
+glimpse(airports)
+glimpse(planes)
+glimpse(weather)
+```
+
+  2.5 Сколько компаний-перевозчиков (carrier) учитывают эти наборы данных (представлено в наборах дан- ных)
+  
+```{r}
+airlines %>% nrow()
+```
+
+  2.6 Сколько рейсов принял аэропорт John F Kennedy Intl в мае?
+  
+```{r}
+flights %>% filter(month == 5, dest == "JFK") %>% nrow()
+```
+
+  2.7 Какой самый северный аэропорт?
+  
+```{r}
+airports %>% arrange(desc(lat)) %>% select(faa, name, lat) %>% head(1)
+```
+
+  2.8  Какой аэропорт самый высокогорный (находится выше всех над уровнем моря)?
+  
+```{r}
+airports %>% arrange(desc(alt)) %>% select(faa, name, alt) %>% head(1)
+```
+
+  2.9 Какие бортовые номера у самых старых самолетов?
+  
+```{r}
+planes %>% filter(year == min(year, na.rm = TRUE)) %>% select(tailnum, year) %>% arrange(year)
+```
+
+  2.10  Какая средняя температура воздуха была в сентябре в аэропорту John F
+ Kennedy Intl (в градусах Цельсия).
+ 
+```{r}
+ weather %>% filter(month == 9, origin == "JFK") %>% summarise(avg_temp_faren = mean(temp, na.rm = TRUE), avg_temp_celsius = (5/9) * (avg_temp_faren - 32))
+```
+
+  2.11 Самолеты какой авиакомпании совершили больше всего вылетов в июне?
+  
+```{r}
+flights %>% filter(month == 6) %>% count(carrier, sort = TRUE) %>% left_join(airlines, by = "carrier") %>% select(name, n) %>% head(1)
+```
+
+  2.12  Самолеты какой авиакомпании задерживались чаще других в 2013 году?
+  
+```{r}
+flights %>% filter(dep_delay > 0 | arr_delay > 0) %>% count(carrier, sort = TRUE) %>% left_join(airlines, by = "carrier") %>% select(name, n) %>% head(1)
+```
+
+## Оценка результата
+
+ В результате практической работы мы поняли как работают функции пакета dpylr при работе с данными.
+
+## Вывод
+
+Таким образом, мы научились мы научились выполнять базовые функции пакета dpylr.
