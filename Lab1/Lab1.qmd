@@ -22,7 +22,9 @@ format:
 2. Rstudio Desktop
 3. Интерпретатор языка R 4.1
 4. Програмный пакет swirl
-
+```{r}
+sessionInfo()
+```
  
 ## План
 
