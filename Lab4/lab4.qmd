@@ -1,0 +1,154 @@
+---
+title: "Исследование метаданных DNS трафика"
+author: "mironopavel@yandex.ru"
+format: 
+  md: 
+    output-file: README.md
+---
+
+## Цель работы
+
+1. Зекрепить практические навыки использования языка программирования R для обработки данных
+2. Закрепить знания основных функций обработки данных экосистемы tidyverse языка R
+3. Закрепить навыки исследования метаданных DNS трафика
+ 
+## Исходные данные
+
+1. Программное обеспечение Windows 10 Pro
+2. Rstudio Desktop
+3. Интерпретатор языка R 4.5.1
+4. Програмный пакет dplyr
+5. Данные DNS
+
+## План
+
+1. Подготовить данные  
+2. Анализ 
+
+## Шаги
+
+1 Импортируйте данные DNS 
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(httr)
+library(jsonlite)
+
+dns_data <- read_tsv("dns.log", col_names = FALSE, comment = "#")
+
+```
+
+2  Добавьте пропущенные данные о структуре данных (назначении столбцов)
+
+```{r}
+colnames(dns_data) <- c("ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", 
+                        "id_resp_p", "proto", "trans_id", "query", "qclass", 
+                        "qtype", "rcode", "rcode_name", "AA", "TC", "RD", 
+                        "RA", "Z", "answers", "TTLs", "rejected")
+if(ncol(dns_data) > 21) {
+  dns_data <- dns_data[, 1:21]
+}
+```
+
+3  Преобразуйте данные в столбцах в нужный формат
+
+```{r}
+dns_data <- dns_data %>%
+  mutate(
+    ts = as_datetime(ts),
+    id_orig_p = as.integer(id_orig_p),
+    id_resp_p = as.integer(id_resp_p)
+  )
+```
+
+4  Просмотрите общую структуру данных с помощью функции glimpse()
+
+```{r}
+glimpse(dns_data)
+```
+
+5  Сколько участников информационного обмена в сети Доброй Организации?
+
+```{r}
+unique_ips <- unique(c(dns_data$id_orig_h, dns_data$id_resp_h))
+cat("\nУчастников обмена:", length(unique_ips), "\n")
+```
+
+6 Какое соотношение участников обмена внутри сети и участников обращений к внешним ресурсам?
+
+```{r}
+internal_ips <- dns_data %>%
+  filter(str_detect(id_orig_h, "^(10\\.|172\\.(1[6-9]|2[0-9]|3[0-1])\\.|192\\.168\\.)")) %>%
+  distinct(id_orig_h) %>%
+  nrow()
+
+external_count <- length(unique_ips) - internal_ips
+cat("Соотношение внутренних и внешних участников:", internal_ips, "/", external_count, "\n")
+```
+
+7 Найдите топ-10 участников сети, проявляющих наибольшую сетевую активность.
+
+```{r}
+top_active <- dns_data %>%
+  count(id_orig_h, sort = TRUE) %>%
+  head(10)
+cat("\nТоп активных участников:\n")
+print(top_active)
+```
+
+8  Найдите топ-10 доменов, к которым обращаются пользователи сети и соответственное количество обращений
+
+```{r}
+top_domains <- dns_data %>%
+  count(query, sort = TRUE) %>%
+  head(10)
+cat("\nТоп доменов:\n")
+print(top_domains)
+```
+
+9  Опеределите базовые статистические характеристики (функция summary()) интервала времени между последовательными обращениями к топ-10 доменам
+
+```{r}
+top_domain_stats <- dns_data %>%
+  filter(query %in% top_domains$query) %>%
+  arrange(query, ts) %>%
+  group_by(query) %>%
+  mutate(time_diff = as.numeric(ts - lag(ts), units = "secs")) %>%
+  summarise(
+    min = min(time_diff, na.rm = TRUE),
+    q1 = quantile(time_diff, 0.25, na.rm = TRUE),
+    median = median(time_diff, na.rm = TRUE),
+    mean = mean(time_diff, na.rm = TRUE),
+    q3 = quantile(time_diff, 0.75, na.rm = TRUE),
+    max = max(time_diff, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+print(top_domain_stats)
+```
+
+10 Часто вредоносное программное обеспечение использует DNS канал в качестве канала управления, периодически отправляя запросы на подконтрольный злоумышленникам DNS сервер. По периодическим запросам на один и тот же домен можно выявить скрытый DNS канал. Есть ли такие IP адреса в исследуемом датасете?
+
+```{r}
+suspicious_activity <- dns_data %>%
+  count(id_orig_h, query, sort = TRUE) %>%
+  filter(n > 5) %>%
+  head(10)
+
+if(nrow(suspicious_activity) > 0) {
+  cat("Подозрительные IP с повторяющимися запросами:\n")
+  print(suspicious_activity)
+} else {
+  cat("Нет подозрительной активности\n")
+}
+
+```
+
+## Оценка результата
+
+ В результате практической работы мы поняли как анализировать данные DNS с помощью языка R.
+
+## Вывод
+
+Таким образом, мы научились, используя язык r, скачивать и анализировать данные DNS.
