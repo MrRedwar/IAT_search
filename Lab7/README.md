@@ -1,4 +1,4 @@
-# Исследование вредоносной активности в домене Windows
+# YandexQuery
 mironopavel@yandex.ru
 
 ## Цель работы

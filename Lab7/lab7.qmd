@@ -1,5 +1,5 @@
 ---
-title: "Исследование вредоносной активности в домене Windows"
+title: "YandexQuery"
 author: "mironopavel@yandex.ru"
 format: 
   md: 
