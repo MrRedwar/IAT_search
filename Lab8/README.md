@@ -48,7 +48,7 @@ mironopavel@yandex.ru
 ![](im/4.png)
 
 5 Все построенные графики вывести в виде единого дашборда в Yandex
-DataLens.
+DataLens. (https://datalens.ru/m6dtj4xx6omc6-lab8-dashbord-mir)
 
 ![](im/5.png)
 
